@@ -11,10 +11,23 @@ header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json");
 
-$method = $_SERVER["REQUEST_METHOD"];
+if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
+  http_response_code(200);
+  exit();
+}
+
 $path = explode("/", trim($_SERVER["REQUEST_URI"], "/"));
+$path = array_filter($path);
+$path = array_values($path);
+
+$method = $_SERVER["REQUEST_METHOD"];
 $input = json_decode(file_get_contents("php://input"), true);
+
 $key = "super_secret_key";
+
+if (empty($path)) {
+  respond(["error" => "Invalid endpoint"], 400);
+}
 
 function generate_jwt($user_id)
 {
@@ -58,24 +71,36 @@ function respond($data, $status = 200)
 }
 
 // Authentication endpoints
-if ($path[0] === "auth") {
-  if ($path[1] === "login") {
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->execute([$input["email"]]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($user && password_verify($input["password"], $user["password"])) {
-      $token = generate_jwt($user["id"]);
-      respond(["token" => $token]);
-    } else {
-      respond(["error" => "Invalid credentials"], 401);
-    }
+if ($path[0] === "auth" && isset($path[1]) && $path[1] === "login") {
+  if ($method !== "POST") {
+    respond(["error" => "Invalid request method"], 405);
+  }
+  // Check if input exists
+  if (!$input || !isset($input["email"], $input["password"])) {
+    respond(["error" => "Missing email or password"], 400);
+  }
+  // Fetch user
+  $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+  $stmt->execute([$input["email"]]);
+  $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  if ($user && password_verify($input["password"], $user["password"])) {
+    $token = generate_jwt($user["id"]);
+    respond(["token" => $token]);
+  } else {
+    respond(["error" => "Invalid credentials"], 401);
   }
 }
 
 // User endpoints
 if ($path[0] === "users") {
   if ($method === "GET") {
-    if (isset($path[1])) {
+    if ($path[1] === "me") {
+      $user_id = authenticate();
+      $stmt = $pdo->prepare("SELECT id, username, email FROM users WHERE id = ?");
+      $stmt->execute([$user_id]);
+      respond($stmt->fetch(PDO::FETCH_ASSOC));
+    } elseif (isset($path[1])) {
       $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
       $stmt->execute([$path[1]]);
       respond($stmt->fetch(PDO::FETCH_ASSOC));
@@ -125,4 +150,3 @@ if ($path[0] === "contacts") {
 }
 
 respond(["error" => "Invalid request"], 400);
-

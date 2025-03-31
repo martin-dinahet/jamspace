@@ -1,18 +1,22 @@
 import React from "react";
 
-export const Index: React.FC = () => {
-  const [users, setUsers] = React.useState<object>({});
+import { useAuth } from "@/components/auth-provider";
 
-  React.useEffect(() => {
-    fetch("http://localhost:8000/users/")
-      .then((response) => response.json())
-      .then((data) => setUsers(data))
-      .catch((error) => console.error(error.message));
-  }, []);
+export const Index: React.FC = () => {
+  const { user, logout } = useAuth();
 
   return (
-    <>
-      <main className="flex h-screen justify-center items-center">{JSON.stringify(users)}</main>
-    </>
+    <div className="flex flex-col h-screen justify-center items-center">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold mb-4">Welcome, {user?.username}!</h2>
+        <p>Email: {user?.email}</p>
+        <button
+          onClick={logout}
+          className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
   );
 };
