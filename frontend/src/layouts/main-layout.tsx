@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 export const MainLayout: React.FC = () => {
   return (
     <>
-      <div>
+      <div className="w-full min-h-screen">
         <Outlet />
       </div>
     </>
