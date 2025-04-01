@@ -92,6 +92,26 @@ if ($path[0] === "auth" && isset($path[1]) && $path[1] === "login") {
   }
 }
 
+if ($path[0] === "auth" && isset($path[1]) && $path[1] === "register") {
+  if ($method !== "POST") {
+    respond(["error" => "Invalid request method"], 405);
+  }
+  // Check if input exists
+  if (!$input || !isset($input["username"], $input["email"], $input["password"])) {
+    respond(["error" => "Missing username, email, or password"], 400);
+  }
+  // Check if email already exists
+  $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+  $stmt->execute([$input["email"]]);
+  if ($stmt->fetch()) {
+    respond(["error" => "Email already in use"], 400);
+  }
+  // Insert new user
+  $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+  $stmt->execute([$input["username"], $input["email"], password_hash($input["password"], PASSWORD_DEFAULT)]);
+  respond(["message" => "User registered successfully"], 201);
+}
+
 // User endpoints
 if ($path[0] === "users") {
   if ($method === "GET") {

@@ -3,11 +3,13 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
-import { Index } from "@/pages/index";
 import { MainLayout } from "@/layouts/main-layout";
 import { AuthProvider } from "@/components/auth-provider";
 
 import "./index.css";
+import { Index } from "@/pages/index";
+import { Login } from "@/pages/login";
+import { Register } from "@/pages/register";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -16,6 +18,8 @@ createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Route>
         </Routes>
       </BrowserRouter>

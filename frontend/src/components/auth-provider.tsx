@@ -6,6 +6,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
+  register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -49,6 +50,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Register function
+  const register = async (username: string, email: string, password: string) => {
+    const res = await fetch("http://localhost:8000/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password }),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      // Automatically log in the user after registration
+      await login(email, password);
+    } else {
+      console.error(data.error);
+    }
+  };
+
   // Logout function
   const logout = () => {
     setUser(null);
@@ -61,7 +79,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [token]);
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, token, login, register, logout }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
