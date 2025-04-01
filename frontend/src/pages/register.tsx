@@ -3,6 +3,14 @@ import React from "react";
 import { useAuth } from "@/components/auth-provider";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import { Card } from "@/components/ui/card";
+import { CardHeader } from "@/components/ui/card";
+import { CardTitle } from "@/components/ui/card";
+import { CardDescription } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
+import { CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export const Register: React.FC = () => {
   const { register } = useAuth();
@@ -18,47 +26,48 @@ export const Register: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen justify-center items-center">
-      <form onSubmit={handleRegister} className="p-6 bg-gray-200 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold mb-4">Register</h2>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="block w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="block w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="block w-full p-2 mb-2 border rounded"
-          required
-        />
-        <button
-          type="submit"
-          className="w-full p-2 mb-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Register
-        </button>
-
-        <NavLink
-          to="/register"
-          className="block w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Already have an account ? Login
-        </NavLink>
-      </form>
-    </div>
+    <>
+      <div className="flex w-full h-screen justify-center items-center">
+        <Card className="w-[20rem]">
+          <CardHeader>
+            <CardTitle>Register</CardTitle>
+            <CardDescription>Register a new account</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleRegister} className="flex flex-col gap-3">
+              <Input
+                type="text"
+                placeholder="Username"
+                value={email}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+              <Input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <Button type="submit" variant="default" className="w-full">
+                Login
+              </Button>
+            </form>
+          </CardContent>
+          <CardFooter>
+            <Button variant="outline" className="w-full" asChild>
+              <NavLink to="/login">Already have an account? Login</NavLink>
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+    </>
   );
 };
