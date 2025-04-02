@@ -57,7 +57,7 @@ export const Register: React.FC = () => {
                 required
               />
               <Button type="submit" variant="default" className="w-full">
-                Login
+                Register
               </Button>
             </form>
           </CardContent>
