@@ -1,2 +1,2 @@
-database.db
-vendor
+node_modules
+database.sqlite
