@@ -3,6 +3,7 @@ import { Request } from "express";
 import { Response } from "express";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/user.entity";
+import { authenticateJWT } from "../middleware/auth.middleware";
 
 // initialize the router
 const router = Router();
@@ -35,8 +36,8 @@ router.get("/:id", async (req: Request, res: Response) => {
   res.json(user);
 });
 
-// UPDATE USER ROUTE
-router.put("/:id", async (req: Request, res: Response) => {
+// UPDATE USER ROUTE (protected)
+router.put("/:id", authenticateJWT, async (req: Request, res: Response) => {
   // get the new data from the request body
   const { username, email, password } = req.body;
   // get the user id from the params
