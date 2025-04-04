@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useAuth } from "@/components/auth-provider";
+import { useAuth } from "@/lib/auth-context";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Card } from "@/components/ui/card";

@@ -2,7 +2,7 @@ import React from "react";
 
 import { Outlet } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { useAuth } from "@/components/auth-provider";
+import { useAuth } from "@/lib/auth-context";
 import { Login } from "@/pages/login";
 import { Register } from "@/pages/register";
 

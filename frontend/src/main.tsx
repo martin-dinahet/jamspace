@@ -3,11 +3,11 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
-import { MainLayout } from "@/layouts/main-layout";
-import { AuthProvider } from "@/components/auth-provider";
 import { Index } from "@/pages/index";
 import { Login } from "@/pages/login";
 import { Register } from "@/pages/register";
+import { MainLayout } from "@/layouts/main-layout";
+import { AuthProvider } from "./lib/auth-context";
 
 import "./index.css";
 

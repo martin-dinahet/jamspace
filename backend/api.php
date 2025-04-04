@@ -98,6 +98,18 @@ if ($path[0] === "auth") {
   }
 }
 
+if ($path[0] === "users" && isset($path[1]) && $path[1] === "me" && $method === "GET") {
+    $userId = authenticate(); // Ensure the user is authenticated
+    $stmt = $pdo->prepare("SELECT id, username, email FROM users WHERE id = ?");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($user) {
+      respond($user);
+    } else {
+      respond(["error" => "User not found"], 404);
+    }
+  }
+  
 // USER ENDPOINTS
 if ($path[0] === "users") {
     $userId = authenticate();
